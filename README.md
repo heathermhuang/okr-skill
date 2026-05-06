@@ -1,54 +1,87 @@
 # OKR Skill
 
-An open-source skill that helps AI coding agents create and maintain OKRs.
+An open-source skill that helps AI coding agents define, track, and score OKRs from inside your project.
 
-Works with Claude Code, Cursor, Codex, or any agent that can read a skill file.
+It turns fuzzy goals into one sharp Objective, 2-4 measurable Key Results, a verification harness, and a local `.okr.md` file your agent can keep updating over time.
+
+Works with Claude Code, Cursor, Codex, or any coding agent that can read a repo file.
 
 ## What It Does
 
-**Define**: Interviews you to create one Objective and 2-4 measurable Key Results. Pushes back on vague goals. Picks the right period based on your feedback loop.
+**Define OKRs**: interviews you, pushes back on vague goals, chooses an OKR period based on your actual feedback loop, and writes `.okr.md`.
 
-**Check-in**: Reads `.okr.md`, updates progress, flags KRs as on_track/at_risk/off_track, recommends next actions.
+**Check in**: reads `.okr.md`, updates current progress, flags KRs as `on_track`, `at_risk`, or `off_track`, and appends a dated check-in.
 
-**Score**: Grades each KR from 0.0 to 1.0, extracts learnings, rolls into next sprint or suggests next focus.
+**Score a period**: grades each KR from 0.0 to 1.0, extracts learnings, and suggests what should roll into the next sprint or OKR period.
+
+**Prevent OKR theater**: catches task-shaped KRs, missing baselines, vanity metrics, arbitrary quarterly planning, and too many simultaneous objectives.
 
 ## Install
 
-Copy this folder to your repo, then tell your agent:
+Clone or copy this repo into your project.
 
-```
-Follow ./okr-skill/SKILL.md for OKR planning and check-ins.
-```
-
-Or reference it in your system prompt / rules file.
-
-## Usage
-
-```
-Define OKRs for this project.
+```bash
+git clone https://github.com/heathermhuang/okr-skill.git
 ```
 
+Then point your agent at the skill file.
+
+## Use with Claude Code
+
+Put this in `CLAUDE.md` or say it directly in Claude Code.
+
+```text
+Use ./okr-skill/SKILL.md when defining, checking in on, or scoring OKRs.
+Keep the project OKRs in .okr.md.
 ```
-Check in on .okr.md - we now have 12 weekly active teams.
+
+Example prompts.
+
+```text
+Define OKRs for this project using ./okr-skill/SKILL.md.
 ```
 
+```text
+Check in on .okr.md. We now have 12 weekly active teams and 2 paid pilots.
 ```
-Score this period. Final: 14 teams, 3 pilots, 5% conversion.
+
+```text
+Score this OKR period. Final results: 14 active teams, 3 pilots, 5% signup conversion.
 ```
 
-## Period Selection
+## Use with Cursor
 
-The period should match your feedback loop, not the calendar.
+Add this to Cursor rules, for example `.cursor/rules/okr.mdc`.
 
-Ask: **"How long until you'll know if this worked?"**
+```text
+When I ask for goals, OKRs, check-ins, or scoring, follow okr-skill/SKILL.md.
+Store and update OKRs in .okr.md at the repo root.
+```
 
-- Landing page conversion? 1-2 weeks
-- Enterprise sales cycle? 3 months  
-- Product-market fit? 6-12 weeks
+Then ask Cursor.
 
-For longer objectives, use nested periods: a 3-month objective with 2-week sprint KRs.
+```text
+Use the OKR skill to define a 6-week objective for this product.
+```
+
+## Use with Codex
+
+Keep `okr-skill/SKILL.md` in the repo and include it in your prompt.
+
+```text
+Read okr-skill/SKILL.md, then create or update .okr.md for this repo.
+Ask one question at a time if you need more context.
+```
+
+For check-ins.
+
+```text
+Read .okr.md and okr-skill/SKILL.md. Update the check-in based on this progress: ...
+```
 
 ## File Format
+
+The skill writes a simple markdown file with YAML frontmatter.
 
 ```yaml
 ---
@@ -73,27 +106,41 @@ created: 2026-04-01
 - Target: 8% conversion
 - Current: 5%
 - Status: on_track
-- Harness: Posthog funnel /landing → /signup
+- Harness: PostHog funnel from /landing to /signup
 - Period: 2 weeks (sprint)
 
 ## Check-ins
 
 ### 2026-04-15
-- KR2 Sprint 1: scored 0.6. Best variant: social proof.
+- KR2 Sprint 1 scored 0.6. Best variant: social proof.
 - Next sprint: test pricing variants.
 ```
 
-## Why OKRs
+## The Core Rule
 
-The Objective is the outcome you want. Key Results are the metrics that prove you got there.
+The Objective is the outcome you want. Key Results are the proof that it happened.
 
-An OKR is not a todo list. "Build email integration" is a task. "Get 50 teams sending weekly digests" is a Key Result.
+Wrong: "Build email integration."
 
-## Persistence
+Right: "Get 50 teams sending weekly digests."
 
-This skill works standalone with a local `.okr.md` file.
+Shipping is activity. Adoption is evidence.
 
-For multi-session persistence across agents and MCP integration, see [okr.io](https://okr.io).
+## Period Selection
+
+The period should match your feedback loop, not the calendar.
+
+Ask: **How long until you'll know if this worked?**
+
+A landing page test might need 1-2 weeks. Enterprise sales might need 3 months. Product-market fit might need 6-12 weeks.
+
+For longer objectives, use nested periods: a 3-month objective with 2-week sprint KRs.
+
+## Full Experience
+
+This skill is the lightweight local version.
+
+For persistent OKR context across Claude Code, Cursor, Codex, MCP, dashboards, returning-user memory, and team-wide agent direction, use [okr.io](https://okr.io).
 
 ## License
 
